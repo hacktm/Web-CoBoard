@@ -8,4 +8,7 @@ angular.module('coboard')
 
 	};
 	
+	$scope.logout = function() {
+		alert('Logout');
+	};
 });
