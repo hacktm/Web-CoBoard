@@ -1,4 +1,4 @@
-<div class="wrapper">
+<div class="wrapper" ng-init="init()">
 	<div class="room-head bg-dark-blue">
 		<img src="assets/images/logo.png" class="logo" />
 		<ul>
@@ -47,35 +47,23 @@
 			</div>
 			</div>
 		</div>
-		<div class="chat">
+		<div class="chat" ng-controller="chat" ng-init="init()">
 			<div class="active-members">
 				<ul class="list-group">
-				  <li class="list-group-item">Cras justo odio</li>
-				  <li class="list-group-item">Dapibus ac facilisis in</li>
-				  <li class="list-group-item">Morbi leo risus</li>
-				  <li class="list-group-item">Porta ac consectetur ac</li>
-				  <li class="list-group-item">Vestibulum at eros</li>
+				  <li ng-repeat="user in users" class="list-group-item" ng-click="startChatWith(user)">{{user.name}}</li>
 				</ul>
 			</div>
 			<div class="messages">
 				<ul class="list-group">
-				  <li class="list-group-item">
-				  	<h4>Name</h4>
-				  	Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque maximus risus dapibus odio egestas sollicitudin. Duis dapibus turpis vitae sapien pharetra lacinia. Nam ac ornare. 
-				  </li>
-				  <li class="list-group-item">
-				  	<h4>Name</h4>
-				  	Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque maximus risus dapibus odio egestas sollicitudin. Duis dapibus turpis vitae sapien pharetra lacinia. Nam ac ornare. 
-				  </li>
-				  <li class="list-group-item">
-				  	<h4>Name</h4>
-				  	Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque maximus risus dapibus odio egestas sollicitudin. Duis dapibus turpis vitae sapien pharetra lacinia. Nam ac ornare. 
+				  <li class="list-group-item" ng-repeat="message in messages">
+				  	<h4>{{message.user}}</h4>
+				  	<p>{{message.text}}</p>
 				  </li>
 				</ul>
 			</div>
 			<div class="add-message">
-				<form ng-submit="sendMessage();" class="form-inline">
-					<input type="text" class="chat-new-message" ng-model="message">
+				<form ng-submit="send();" class="form-inline">
+					<input type="text" class="chat-new-message" ng-bind="message">
 					<button class="btn">Add</button>
 				</form>
 			</div>
