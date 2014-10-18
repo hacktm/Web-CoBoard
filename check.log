@@ -1,0 +1,134 @@
+[4mRunning "newer:jshint" (newer) task[24m
+
+[4mRunning "newer:jshint:server" (newer) task[24m
+No newer files to process.
+
+[4mRunning "newer:jshint:all" (newer) task[24m
+
+[4mRunning "jshint:all" (jshint) task[24m
+
+✔ No problems
+
+
+[4mRunning "newer-postrun:jshint:all:1:/var/www/wallsongs.net/node_modules/grunt-newer/.cache" (newer-postrun) task[24m
+
+[4mRunning "newer:jshint:test" (newer) task[24m
+No newer files to process.
+
+[4mRunning "test" task[24m
+
+[4mRunning "test:server" (test) task[24m
+
+[4mRunning "env:all" (env) task[24m
+
+[4mRunning "env:test" (env) task[24m
+
+[4mRunning "mochaTest:src" (mochaTest) task[24m
+{ env: 'test',
+  root: '/var/www/wallsongs.net',
+  port: 9000,
+  securePort: 9001,
+  seedDB: false,
+  secrets: { session: 'ws-secret' },
+  userRoles: [ 'guest', 'user', 'admin' ],
+  mongo: 
+   { options: { db: [Object], auth: {}, server: [Object], replset: [Object] },
+     uri: 'mongodb://wstst:7mz67Svn@albulescu.ro/ws_testing' },
+  facebook: 
+   { clientID: 'id',
+     clientSecret: 'secret',
+     callbackURL: '/auth/facebook/callback' },
+  twitter: 
+   { clientID: 'id',
+     clientSecret: 'secret',
+     callbackURL: '/auth/twitter/callback' },
+  google: 
+   { clientID: 'id',
+     clientSecret: 'secret',
+     callbackURL: '/auth/google/callback' } }
+
+
+  User Model
+    ✓ should begin with no users (39ms)
+    ✓ should fail when saving a duplicate user (154ms)
+    ✓ should fail when saving without an email 
+    ✓ should authenticate user if password is valid 
+    ✓ should not authenticate user if password is invalid 
+
+
+  5 passing (781ms)
+
+
+[4mRunning "test:client" (test) task[24m
+
+[4mRunning "clean:server" (clean) task[24m
+Cleaning .tmp...[32mOK[39m
+
+[4mRunning "env:all" (env) task[24m
+
+[4mRunning "injector:less" (injector) task[24m
+[90mMissing option `template`, using `dest` as template instead[39m
+Injecting [32mless[39m files [90m(13 files)[39m
+[32m>> [39mNothing changed
+
+[4mRunning "concurrent:test" (concurrent) task[24m
+    
+    [4mRunning "less:server" (less) task[24m
+    File .tmp/app/app.css created: 0 B → 242.73 kB
+    
+    [32mDone, without errors.[39m
+    
+    
+    Execution Time (2014-10-16 16:17:17 UTC)
+    loading tasks  148ms  ▇▇▇▇▇▇▇▇▇ 18%
+    less:server    690ms  ▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇ 82%
+    Total 838ms
+    
+[4mRunning "injector:scripts" (injector) task[24m
+[90mMissing option `template`, using `dest` as template instead[39m
+Injecting [32mjs[39m files [90m(45 files)[39m
+[32m>> [39mNothing changed
+
+[4mRunning "injector:less" (injector) task[24m
+[90mMissing option `template`, using `dest` as template instead[39m
+Injecting [32mless[39m files [90m(13 files)[39m
+[32m>> [39mNothing changed
+
+[4mRunning "injector:css" (injector) task[24m
+[90mMissing option `template`, using `dest` as template instead[39m
+[32m>> [39mNothing changed
+
+[4mRunning "autoprefixer:dist" (autoprefixer) task[24m
+File .tmp/app/app.css created.
+
+[4mRunning "karma:unit" (karma) task[24m
+[32mINFO [karma]: [39mKarma v0.12.23 server started at http://localhost:8080/
+[32mINFO [launcher]: [39mStarting browser PhantomJS
+[33mWARN [watcher]: [39mPattern "/var/www/wallsongs.net/client/bower_components/angular-route/angular-route.js" does not match any file.
+[33mWARN [watcher]: [39mPattern "/var/www/wallsongs.net/client/app/app.coffee" does not match any file.
+[33mWARN [watcher]: [39mPattern "/var/www/wallsongs.net/client/app/**/*.coffee" does not match any file.
+[33mWARN [watcher]: [39mPattern "/var/www/wallsongs.net/client/components/**/*.coffee" does not match any file.
+[33mWARN [watcher]: [39mPattern "/var/www/wallsongs.net/client/app/**/*.jade" does not match any file.
+[33mWARN [watcher]: [39mPattern "/var/www/wallsongs.net/client/components/**/*.jade" does not match any file.
+[32mINFO [PhantomJS 1.9.7 (Linux)]: [39mConnected on socket 3SbEZYzKnq2vE7-Pv8kC with id 93920730
+[31mPhantomJS 1.9.7 (Linux) ERROR[39m
+  SyntaxError: Parse error
+  at /var/www/wallsongs.net/client/bower_components/angular-ca-drag/ca-drag.js:826
+
+
+[33mWarning: Task "karma:unit" failed. Use --force to continue.[39m
+
+[31mAborted due to warnings.[39m
+
+
+Execution Time (2014-10-16 16:17:14 UTC)
+loading tasks       95ms  ▇ 2%
+newer:jshint:all   130ms  ▇ 2%
+jshint:all         507ms  ▇▇▇▇ 9%
+mochaTest:src       1.7s  ▇▇▇▇▇▇▇▇▇▇▇▇▇ 30%
+concurrent:test     1.1s  ▇▇▇▇▇▇▇▇▇ 19%
+injector:css       140ms  ▇▇ 2%
+autoprefixer:dist  487ms  ▇▇▇▇ 9%
+karma:unit          1.4s  ▇▇▇▇▇▇▇▇▇▇▇ 25%
+Total 5.7s
+
