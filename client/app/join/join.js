@@ -13,4 +13,13 @@ angular.module('coboard')
         },
         data : { title:'Join' }
       })
+  })
+  .controller('join', function($scope){
+    
+    $scope.rooms = [{name: 'test1', members: 21},{name: 'test2', members: 21},{name: 'test3', members: 21}];
+
+    $scope.joiRoom = function(){
+
+    };
+
   });
