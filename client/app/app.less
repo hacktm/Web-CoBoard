@@ -4,14 +4,6 @@
 @icon-font-path: '/bower_components/bootstrap/fonts/';
 @fa-font-path: '/bower_components/font-awesome/fonts';
 
-/**
- * App-wide Styles
- */
-// injector
-@import 'account/login/login.less';
-@import 'main/main.less';
-// endinjector
-
 html, body{
 	height: 100%;
 	overflow: hidden;
@@ -81,3 +73,9 @@ html, body{
 .main-wrapper{
 	height: 100%;
 }
+
+// injector
+@import 'account/login/login.less';
+@import 'join/join.less';
+@import 'main/main.less';
+// endinjector
