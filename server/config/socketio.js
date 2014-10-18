@@ -24,7 +24,7 @@ function onConnect(socket) {
 }
 
 
-var rooms = [];
+var rooms = {};
 
 module.exports = function (socketio, app) {
 
@@ -71,7 +71,6 @@ module.exports = function (socketio, app) {
 
     var theSocket;
 
-
     socketio.on('connection', function (socket) {
 
         socket.address = socket.handshake.address !== null ?
@@ -88,7 +87,7 @@ module.exports = function (socketio, app) {
             rooms[roomId] = room;
 
             // Send back the room
-            socket.emit('room.created',{'roomId': roomId });
+            socket.emit('room.created', {'roomId': roomId });
 
         });
 
@@ -97,19 +96,20 @@ module.exports = function (socketio, app) {
             console.log('Adding client to room ',  data.roomId);
             rooms[data.roomId].addClient(socket);
 
-
             console.log("new rooms array");
             console.log(rooms);
+			
+			var roomId = data.roomId;
+			socket.emit('room.joined',{'roomId': roomId });
 
         });
 
         socket.on('message', function (data) {
             var roomId = data.roomId;
             rooms[roomId].emit(data);
-            console.log('Got message that should be sent to ', roomId);
+            console.log('Got message that should be sent to ', roomId, data);
 
         });
-
 
         // Call onDisconnect.
         socket.on('disconnect', function () {
