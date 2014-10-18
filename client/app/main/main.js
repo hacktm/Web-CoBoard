@@ -8,7 +8,7 @@ angular.module('coboard')
         views : {
           main : {
             templateUrl: 'app/main/main.html',
-            controller: 'MainController'
+            controller: 'BoardController'
           }
         },
         data : { title:'Login' }
