@@ -1,7 +1,10 @@
 <div class="wrapper">
 	<div class="room-head bg-dark-blue">
-		<h2 class="white">Co.Board</h2>
+		<img src="assets/images/logo.png" class="logo" />
 		<ul>
+			<li>
+				<button class="btn">Invite</button>
+			</li>
 			<li>
 				<button class="btn">Upload</button>
 			</li>
@@ -71,7 +74,10 @@
 				</ul>
 			</div>
 			<div class="add-message">
-				
+				<form ng-submit="sendMessage();" class="form-inline">
+					<input type="text" class="chat-new-message" ng-model="message">
+					<button class="btn">Add</button>
+				</form>
 			</div>
 		</div>
 	</div>
