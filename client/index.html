@@ -7,7 +7,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <base href="/">
-    <title>Wall Songs - Songs that you love</title>
+    <title>CoBoard</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
@@ -25,22 +25,8 @@
     <!-- endbuild -->
   </head>
   <body data-ng-app="coboard" data-ng-controller="main" data-ng-init="init()">
-    <!--[if lt IE 7]>
-      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-    <![endif]-->
 
-      <div class="ws-content-inner" data-ui-view="main"></div>
-
-      <div class="ws-content-inner" data-ui-view="main"></div>
-
-      <button ng-click="socketTest()">Send socket data</button>
-
-      <input type="text" placeholder="Enter room number" /> <button>Join</button>
-      <br><br>
-      <button>Create New Room</button>
-
-
-    <button ng-click="socketTest()">Send socket data</button>
+      <div class="main-wrapper" data-ui-view="main"></div>
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
      <script>
@@ -83,6 +69,10 @@
       <script src="app/account/login/login.controller.js"></script>
       <script src="app/account/settings/settings.controller.js"></script>
       <script src="app/account/signup/signup.controller.js"></script>
+      <script src="app/join/join.controller.js"></script>
+      <script src="app/join/join.js"></script>
+      <script src="app/main/main.controller.js"></script>
+      <script src="app/main/main.js"></script>
       <script src="components/auth/auth.service.js"></script>
       <script src="components/auth/user.service.js"></script>
       <script src="components/mongoose-error/mongoose-error.directive.js"></script>
