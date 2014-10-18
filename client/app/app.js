@@ -39,9 +39,4 @@ angular.module('coboard', [
 
 .controller('main', function($scope, socket){
 
-  $scope.socketTest=function() {
-    console.log(socket);
-    socket.emit('info', {"a":"b"});
-  };
-
 });

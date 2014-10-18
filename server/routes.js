@@ -11,6 +11,9 @@ module.exports = function(app) {
   // Insert routes below
   app.use('/api/users', require('./api/user'));
 
+  // Room functions
+  app.use('/room', require('./room'));
+
   app.use('/auth', require('./auth'));
   
   // All undefined asset or api routes should return a 404
