@@ -1,25 +1,15 @@
-<div class="bg-blue join-wrapper">
+<div class="bg-blue join-wrapper" ng-controller="join">
 	<h1 class="title light-blue">Co.Board</h1>
 	<form rol="form" class="form-inline search-room">
-	<input type="text" name="room-name" placeholder="Room name" class="form-control bg-light-blue">
+	<input type="text" name="room-name" placeholder="Room name" class="form-control bg-light-blue" ng-model="search">
 	<button class="btn bg-light-blue">Search</button>
 	</form>
 	<div class="rooms">
 	<ul class="list-group">
-	  <li class="list-group-item">
-	    <span class="badge bg-blue">14</span>
-	   	<button class="btn bg-light-blue join">Join</button>
-	   	Room name
-	  </li>
-	  <li class="list-group-item">
-	    <span class="badge bg-blue">14</span>
-	   	<button class="btn bg-light-blue join">Join</button>	
-	   	Room name
-	  </li>
-	   <li class="list-group-item">
-	    <span class="badge bg-blue">14</span>
-	    <button class="btn bg-light-blue join">Join</button>
-	   	Room name
+	  <li class="list-group-item" ng-repeat="room in rooms | filter: search">
+	    <span class="badge bg-blue">{{room.members}}</span>
+	   	<button class="btn bg-light-blue join" ng-click="joinRoom()">Join</button>
+	   	{{room.name}}
 	  </li>
 	</ul>
 	</div>
