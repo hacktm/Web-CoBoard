@@ -4,13 +4,13 @@ angular.module('coboard')
     .config(function ($stateProvider) {
         $stateProvider
             .state('test', {
-                url: '/',
+                url: '/test',
                 views : {
                     main : {
-                        templateUrl: 'app/main/main.html',
-                        controller: 'BoardController'
+                        templateUrl: 'app/test/test.html',
+                        controller: 'TestController'
                     }
                 },
-                data : { title:'Login' }
+                data : { title:'Test' }
             })
     });

@@ -39,27 +39,4 @@ angular.module('coboard', [
 
 .controller('main', function($scope, socket){
 
-
-  $scope.socketTest=function() {
-
-    var roomId = null;
-
-    console.log(socket);
-
-    socket.emit('room.create',{
-
-    });
-
-    socket.on('room.created',function(data){
-
-        roomId = data.roomId;
-        console.log("Room with ID " + roomId + " Created");
-
-    });
-
-
-
-      //socket.emit('info:"b"});
-  };
-
 });
