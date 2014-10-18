@@ -1,5 +1,12 @@
-<input type="text" ng-model="roomId" placeholder="room Id" /><button ng-click="joinRoom()">Join Room</button>
+<input type="text" ng-model="roomId" placeholder="room Id"/>
+<input type="text" ng-model="roomName" placeholder="room name" />
+<input type="text" ng-model="userName" placeholder="user name" /><br/>
+<input label="Message" type="text" ng-model="message" placeholder="message" /><br/>
 
-<button ng-click="createRoom()">Create room</button>
+<button ng-click="joinRoom()">Join Room</button><br/>
 
-<button ng-click="sendMessage()">Send Message</button>
+<button ng-click="createRoom()">Create room</button><br/>
+
+<button ng-click="sendMessage()">Send Message</button><br/>
+
+<button ng-click="leaveRoom()">Leave room</button><br/>

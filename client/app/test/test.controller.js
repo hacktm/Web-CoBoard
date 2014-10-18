@@ -4,55 +4,71 @@ angular.module('coboard')
 
     .controller('TestController', function( $scope, socket ) {
 
-        $scope.roomId = null;
-        $scope.init = function() {
-     };
-
-		$scope.sendMessage = function() {
-			var roomId = $scope.roomId;
-			var data = {"a": "b", "roomId": roomId};
-
-			console.log("Room id", $scope.roomId);
-			socket.on('message',function(data){
-				console.log("Received message from server",data);
-			});
-
-			socket.emit('message', data);
-			
-		};
+	function logOperation(operation, message, data) {
+		console.log("Client " + operation + ": " + message + "\n" + JSON.stringify(data));
+	}
+	
+	function addHandlers(socket) {
+		if (socket.initialized)
+			return;
 		
-        $scope.createRoom = function() {
-			var roomId = $scope.roomId;
-            var roomName = $scope.roomName;
-			
-            socket.on('room.created',function(data){
-                var roomId = data.roomId;
-                $scope.roomId = roomId;
-                console.log("Room with ID " + roomId + " Created");
-            });
+		socket.on('message',function(data){
+			logOperation("received", "message", data);
+			console.log("Received message from server",data);
+			$scope.message = data.message;
+		});
 
-			socket.on('message',function(data){
-				console.log("Received message from server",data);
-			});
-			
-			socket.emit('room.create',{});
+		socket.on('room.created',function(data) {
+			logOperation("room.created", "message", data);
+			$scope.roomId = data.roomId;
+		});
+		
+		socket.on('room.left', function(data) {
+			logOperation("received", "room.left", data);
+			$scope.roomId = "";
+		});
+		
+		socket.on('room.joined', function(data) {
+			logOperation("received", "room.joined", data);
+			$scope.roomId = data.roomId;
+		});
+		
+		socket.on('error', function(data) {
+			logOperation("received", "error", data);
+		});
+		
+		socket.initialized = true;
+	}
 
-        };
+	$scope.roomId = null;
+	$scope.init = function() {};
 
-        $scope.joinRoom=function() {
-			var roomId = $scope.roomId;
-			socket.on('message',function(data){
-				console.log("Received message from server",data);
-			});
-			
-			socket.on('room.joined', function(data) {
-				console.log("Joined room",data);
-			});
-   
-            var roomId = $scope.roomId;
+	$scope.sendMessage = function() {
+		addHandlers(socket);
+		var data = {"roomId": $scope.roomId, "user": $scope.userName, "message": $scope.message};
+		logOperation("sending", "message", data);
+		socket.emit('message', data);
+	};
+	
+	$scope.createRoom = function() {
+		addHandlers(socket);
+		var data = {"name": $scope.roomName, "user": $scope.userName};
+		logOperation("sending", "room.create", data);
+		socket.emit('room.create', data);
+	};
 
-            console.log('Joining room with id',roomId);
-            socket.emit('room.join',{'roomId' : roomId});
-        };
+	$scope.leaveRoom = function() {
+		addHandlers(socket);
+		var data = {"roomId": $scope.roomId, "user": $scope.userName};
+		logOperation("sending", "room.leave", data);
+		socket.emit('room.leave', data);
+	};
+	
+	$scope.joinRoom=function() {
+		addHandlers(socket);
+		var data = {"roomId": $scope.roomId, "user": $scope.userName};
+		logOperation("sending", "room.join", data);
+		socket.emit('room.join', data);
+	};
 		
     });

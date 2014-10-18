@@ -25,14 +25,22 @@ function onConnect(socket) {
 
 
 var rooms = {};
+var users = {};
 
 module.exports = function (socketio, app) {
 
-    function Room(owner) {
+	function User(socket, name) {
+		this.socket = socket;
+		this.id = socket.id;
+		this.name = name;
+	}
+	
+    function Room(roomName, owner) {
+		this.roomName = roomName;
         this.owner = owner;
         this.uid = uuid.v4();
 
-        owner.join(this.uid);
+        this.owner.socket.join(this.uid);
 
         this.clients = [];
         this.clients.push(owner);
@@ -41,18 +49,45 @@ module.exports = function (socketio, app) {
             return this.uid;
         }
 
-        this.addClient = function (socket) {
-            socket.join(this.uid);
-            this.clients.push(socket);
+        this.addClient = function (user) {
+			if (this.clients[user.name])
+				return;
+            user.socket.join(this.uid);
+            this.clients[user.name] = user;
         }
 
+        this.removeClient = function(user) {
+			if (!this.clients[user.name])
+				return;
+			this.clients[user.name] = null;
+			socketio.leave(this.uid);
+		}
+
         this.emit = function (eventName, data) {
-            console.log("number of clients", this.clients.length);
+            console.log("number of clients: " + this.clients.length + ", message type: " + eventName);
             socketio.to(this.uid).emit(eventName, data);
         }
     }
 
-
+	function logMessage(eventName, data) {
+		console.info("Received " + eventName + "\n" + JSON.stringify(data));
+	}
+	
+	function getUser(userName, socket) {
+		console.log("Get user named " + userName);
+		if (users[userName]) {
+			console.log("Found user " + userName + ": " + socket.id);
+			if (socket.id != users[userName].socket.id)
+				return null;
+			console.log("Returning user " + userName + ": " + socket.id);
+			return users[userName];
+		}
+		var user = new User(socket, userName);
+		users[userName] = user;
+		console.log("Returning new user " + userName + ": " + socket.id);
+		return user;
+	}
+	
     // socket.io (v1.x.x) is powered by debug.
     // In order to see all the debug output, set DEBUG (in server/config/local.env.js) to including the desired scope.
     //
@@ -64,54 +99,66 @@ module.exports = function (socketio, app) {
     //
     // 2. Require authentication here:
 
-    socketio.use(require('socketio-jwt').authorize({
-        secret: config.secrets.session,
-        handshake: true
-    }));
+//     socketio.use(require('socketio-jwt').authorize({
+//         secret: config.secrets.session,
+//         handshake: true
+//     }));
 
     var theSocket;
-
+	
     socketio.on('connection', function (socket) {
 
         socket.address = socket.handshake.address !== null ?
             socket.handshake.address.address + ':' + socket.handshake.address.port :
             process.env.DOMAIN;
 
-        socket.on('room.create',function() {
-
-            // Create room
-            var room = new Room(socket);
-
-            // Generate room id and save it
+        socket.on('room.create',function(data) {
+			logMessage('room.create', data);
+			var user = getUser(data.user, socket);
+			if (!user) {
+				socket.emit('user.error', {"message": "User already exists"});
+				return;
+			}
+            var room = new Room(data.roomName, user);
             var roomId = room.getUid();
             rooms[roomId] = room;
-
-            // Send back the room
             socket.emit('room.created', {'roomId': roomId });
-
         });
 
         socket.on('room.join', function (data) {
-
-            console.log('Adding client to room ',  data.roomId);
-            rooms[data.roomId].addClient(socket);
-
-            console.log("new rooms array");
-            console.log(rooms);
-			
-			var roomId = data.roomId;
-			socket.emit('room.joined',{'roomId': roomId });
-
+			logMessage('room.join', data);
+			var user = getUser(data.user, socket);
+			if (!user) {
+				socket.emit('user.error', {"message": "User already exists"});
+				return;
+			}
+            rooms[data.roomId].addClient(user);
+			socket.emit('room.joined',{'roomId': data.roomId, 'user': user.name });
         });
+		
+		socket.on('room.leave', function(data) {
+			logMessage('room.leave', data);
+			var user = getUser(data.user, socket);
+			if (!user) {
+				socket.emit('user.error', {"message": "User already exists"});
+				return;
+			}
+			rooms[data.roomId].removeClient(user);
+			socket.emit('room.left',{'roomId': data.roomId, 'user': user.name });
+		});
 
         socket.on('message', function (data) {
             var roomId = data.roomId;
-            rooms[roomId].emit(data);
+			var user = getUser(data.user, socket);
+			if (!user) {
+				socket.emit('user.error', {"message": "User already exists"});
+				return;
+			}
+            rooms[roomId].emit('message', data);
             console.log('Got message that should be sent to ', roomId, data);
-
         });
 
-        // Call onDisconnect.
+		// I don't know what this is meant to achieve - Anonymous-Coward
         socket.on('disconnect', function () {
             onDisconnect(socket);
             console.info('[%s] DISCONNECTED', socket.address);
