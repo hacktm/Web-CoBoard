@@ -29,11 +29,20 @@ angular.module('coboard')
 .controller('chat', function($scope,socket){
 
 	$scope.init = function() {
+
+        socket.on('users.listed',function(data){
+
+            $scope.users = data;
+
+        });
+
+        socket.emit('users.list', {
+            room: $scope.roomId
+        });
+
 	};
 
 	$scope.message = '';
-
-	$scope.users = [{ id : 1, name : 'Ionica'}];
 
 	$scope.messages = [{ text : 'test', user: 'user' }];
 
