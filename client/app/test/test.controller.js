@@ -37,6 +37,14 @@ angular.module('coboard')
 			logOperation("received", "error", data);
 		});
 		
+		socket.on('rooms.listed', function(data) {
+			logOperation("received", "rooms.listed", data);
+		});
+
+		socket.on('users.listed', function(data) {
+			logOperation("received", "users.listed", data);
+		});
+		
 		socket.initialized = true;
 	}
 
@@ -70,5 +78,16 @@ angular.module('coboard')
 		logOperation("sending", "room.join", data);
 		socket.emit('room.join', data);
 	};
+	
+	$scope.listRooms = function() {
+		addHandlers(socket);
+		socket.emit("rooms.list", {});
+	};
 		
-    });
+	$scope.listUsers = function() {
+		addHandlers(socket);
+		socket.emit("users.list", {});
+	};
+});
+	
+	
