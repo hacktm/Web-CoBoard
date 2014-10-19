@@ -203,13 +203,17 @@ module.exports = function (socketio, app) {
 		socket.on('rooms.list', function(data) {
 			var data = [];
 			var userName = data.user;
+			console.log("Listing rooms for user " + userName);
 			for (var roomId in rooms) {
 				var room = rooms[roomId];
 				if (!(userName) || room.clients[userName]) {
+					console.log("Adding room " + room.name + " to response.");
 					data.push({
 						"roomId": roomId,
 						"name": room.name
 					});
+				} else {
+					console.log("Not adding room " + room.name + " to response.");
 				}
 			}
 			socket.emit('rooms.listed', data);
