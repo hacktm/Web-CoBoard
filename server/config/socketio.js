@@ -77,7 +77,7 @@ module.exports = function (socketio, app) {
 					return;
 				}
 			}
-		}
+		}	
     }
 
 	function logMessage(eventName, data) {
@@ -187,10 +187,11 @@ module.exports = function (socketio, app) {
 			}
         });
 		
-		socket.on('users.list', function() {
+		socket.on('users.list', function(data) {
+			var userList = (data.room) ? rooms[data.room].clients : users;
 			var data = [];
-			for (var userName in users) {
-				var user = users[userName];
+			for (var tag in userList) {
+				var user = userList[userName];
 				data.push({
 					"id": user.id,
 					"name": user.name
@@ -199,14 +200,17 @@ module.exports = function (socketio, app) {
 			socket.emit('users.listed', data);
 		});
 		
-		socket.on('rooms.list', function() {
+		socket.on('rooms.list', function(data) {
 			var data = [];
+			var userName = data.user;
 			for (var roomId in rooms) {
 				var room = rooms[roomId];
-				data.push({
-					"roomId": roomId,
-					"name": room.name
-				});
+				if (!(userName) || room.clients[userName]) {
+					data.push({
+						"roomId": roomId,
+						"name": room.name
+					});
+				}
 			}
 			socket.emit('rooms.listed', data);
 		});
