@@ -2,10 +2,24 @@
 
 angular.module('coboard')
 
-.controller('BoardController', function( $scope ){
+.controller('BoardController', function( $scope, $stateParams, socket ){
+
+        $scope.roomId = null;
+        $scope.userName = "Ovidiu23";
 
 	$scope.init = function() {
-	};
+
+        socket.on('room.joined', function(data){
+            console.log('joined room');
+        });
+
+        $scope.roomId = $stateParams.room;
+        var data = {"roomId": $scope.roomId, "user": $scope.userName};
+
+        console.log("Joining room " + $scope.roomId);
+        socket.emit('room.join', data);
+
+    };
 	
 	$scope.logout = function() {
 		alert('Logout');
