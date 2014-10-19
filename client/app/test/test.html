@@ -1,28 +1,58 @@
-<input type="text" ng-model="roomId" placeholder="room Id"/>
-<input type="text" ng-model="roomName" placeholder="room name" />
-<input type="text" ng-model="userName" placeholder="user name" /><br/>
-<input label="Message" type="text" ng-model="message" placeholder="message" /><br/>
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style>
+		body{
+			background-color: #330099;
+		}
+		button{
+			display: inline-block;
+			margin-right: 15px;
+			color: #fff;
+			appearance: none;
+			-o-appearance: none;
+			-ms-appearance: none;
+			-moz-appearance: none;
+			-webkit-appearance: none;
+			border: 1px solid #333;
+			box-shadow: 0px 0px 5px #000;
+			border-radius: 3px;
+		}
+		button:nth-child(odd){
+			background-color: #660000;
+		}
+		button:nth-child(even){
+			background-color: #990033;
+		}
+		button + br{
+			display: none;
+		}
+	</style>
+</head>
+<body style="background-color:#">
+	<input type="text" ng-model="roomId" placeholder="room Id"/>
+	<input type="text" ng-model="roomName" placeholder="room name" />
+	<input type="text" ng-model="userName" placeholder="user name" /><br/>
+	<input label="Message" type="text" ng-model="message" placeholder="message" /><br/>
 
-<button ng-click="joinRoom()">Join Room</button><br/>
+	<button ng-click="joinRoom()">Join Room</button><br/>
 
-<button ng-click="createRoom()">Create room</button><br/>
+	<button ng-click="createRoom()">Create room</button><br/>
 
-<button ng-click="sendMessage()">Send Message</button><br/>
+	<button ng-click="sendMessage()">Send Message</button><br/>
 
-<button ng-click="leaveRoom()">Leave room</button><br/>
+	<button ng-click="leaveRoom()">Leave room</button><br/>
 
-<button ng-click="listRooms()">List rooms</button><br/>
+	<button ng-click="listRooms()">List rooms</button><br/>
 
-<button ng-click="listUsers()">List users</button><br/>
+	<button ng-click="listUsers()">List users</button><br/>
 
-<button ng-click="listRooms()">List rooms for user</button><br/>
+	<button ng-click="listRooms()">List rooms for user</button><br/>
 
-<button ng-click="listUsers()">List users for room</button><br/>
+	<button ng-click="listUsers()">List users for room</button><br/>
 
-<div>
-	<canvas id="canvas" style="background-color:#000000"
-			width=800 height=600
-			ng-mousedown="canvasMouseDown($event)"
-			ng-mouseup="canvasMouseUp($event)"
-			ng-mousemove="canvasMouseMove($event)"/>
-</div>
+</body>
+</html>
+
+
