@@ -23,7 +23,6 @@ function onConnect(socket) {
     //require('../api/song/song.socket').register(socket);
 }
 
-
 var rooms = {};
 var users = {};
 
@@ -64,9 +63,21 @@ module.exports = function (socketio, app) {
 		}
 
         this.emit = function (eventName, data) {
-            console.log("number of clients: " + this.clients.length + ", message type: " + eventName);
+			var userNames = "";
+			for (var index in this.clients)
+				userNames += (this.clients[index].name + ", ");
+            console.log("number of clients: " + this.clients.length + ", message type: " + eventName + ", destined to: " + userNames);
             socketio.to(this.uid).emit(eventName, data);
         }
+
+        this.clientDisconnected = function(socketId) {
+			for (var index in this.clients) {
+				if (this.clients[index].id === socketId) {
+					this.clients = removeArrayElement(this.clients, index);
+					return;
+				}
+			}
+		}
     }
 
 	function logMessage(eventName, data) {
@@ -86,6 +97,14 @@ module.exports = function (socketio, app) {
 		users[userName] = user;
 		console.log("Returning new user " + userName + ": " + socket.id);
 		return user;
+	}
+	
+	function removeArrayElement(array, key) {
+		var newArray = [];
+		for (var tag in array)
+			if (tag !== key)
+				newArray[tag] = array[tag];
+		return newArray;
 	}
 	
     // socket.io (v1.x.x) is powered by debug.
@@ -148,6 +167,7 @@ module.exports = function (socketio, app) {
 		});
 
         socket.on('message', function (data) {
+			logMessage('message', data);
             var roomId = data.roomId;
 			var user = getUser(data.user, socket);
 			if (!user) {
@@ -155,14 +175,41 @@ module.exports = function (socketio, app) {
 				return;
 			}
             rooms[roomId].emit('message', data);
-            console.log('Got message that should be sent to ', roomId, data);
         });
 
-		// I don't know what this is meant to achieve - Anonymous-Coward
         socket.on('disconnect', function () {
-            onDisconnect(socket);
-            console.info('[%s] DISCONNECTED', socket.address);
+			for (var userName in users) {
+				if (users[userName].socket.id === socket.id)
+					users[userName] = null;
+			}
+			for (var roomId in rooms) {
+				rooms[roomId].clientDisconnected(socket.id);
+			}
         });
+		
+		socket.on('users.list', function() {
+			var data = [];
+			for (var userName in users) {
+				var user = users[userName];
+				data.push({
+					"id": user.id,
+					"name": user.name
+				});
+			}
+			socket.emit('users.listed', data);
+		});
+		
+		socket.on('rooms.list', function() {
+			var data = [];
+			for (var roomId in rooms) {
+				var room = rooms[roomId];
+				data.push({
+					"roomId": roomId,
+					"name": room.name
+				});
+			}
+			socket.emit('rooms.listed', data);
+		});
 
         theSocket = socket;
 
