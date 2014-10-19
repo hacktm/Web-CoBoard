@@ -18,3 +18,11 @@
 <button ng-click="listRooms()">List rooms for user</button><br/>
 
 <button ng-click="listUsers()">List users for room</button><br/>
+
+<div>
+	<canvas id="canvas" style="background-color:#000000"
+			width=800 height=600
+			ng-mousedown="canvasMouseDown($event)"
+			ng-mouseup="canvasMouseUp($event)"
+			ng-mousemove="canvasMouseMove($event)"/>
+</div>

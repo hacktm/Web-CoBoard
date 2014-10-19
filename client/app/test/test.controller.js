@@ -8,6 +8,47 @@ angular.module('coboard')
 		console.log("Client " + operation + ": " + message + "\n" + JSON.stringify(data));
 	}
 	
+	var canvasMoused = false;
+	var coordinates = {"x": -1, "y": -1};
+	
+	function translateCanvasCoordinates(x, y) {
+		var canvas = document.getElementById('canvas');
+		var canvasX = canvas.offsetLeft;
+		var canvasY = canvas.offsetTop;
+		return {"x": x - canvasX, "y": y - canvasY};
+	}
+	
+	function handleCanvasMessage(data) {
+		var ctx = document.getElementById('canvas').getContext('2d');
+		var newCoordinates = translateCanvasCoordinates(data.x, data.y);
+		console.log("Old coordinates: [" + coordinates.x + ", " + coordinates.y + "]");
+		console.log("New coordinates: [" + newCoordinates.x + ", " + newCoordinates.y + "]");
+		ctx.fillStyle = "#FF0000";
+		ctx.strokeStyle ="#FFFFFF";
+		if (data.mouseEventType == "down") {
+			console.log("Mouse down");
+			canvasMoused = true;
+			ctx.fillRect(newCoordinates.x - 1, newCoordinates.y - 1, 2, 2);
+		}
+		if ((data.mouseEventType == "move") && canvasMoused) {
+			console.log("Mouse move");
+			ctx.beginPath();
+			ctx.moveTo(coordinates.x, coordinates.y);
+			ctx.lineTo(newCoordinates.x, newCoordinates.y);
+			ctx.stroke();
+		}
+		if (data.mouseEventType == "up") {
+			console.log("Mouse up");
+			ctx.beginPath();
+			ctx.moveTo(coordinates.x, coordinates.y);
+			ctx.lineTo(newCoordinates.x, newCoordinates.y);
+			ctx.stroke();
+			ctx.fillRect(newCoordinates.x - 1, newCoordinates.y - 1, 2, 2);
+			canvasMoused = false;
+		}
+		coordinates = newCoordinates;
+	}
+	
 	function addHandlers(socket) {
 		if (socket.initialized)
 			return;
@@ -15,7 +56,11 @@ angular.module('coboard')
 		socket.on('message',function(data){
 			logOperation("received", "message", data);
 			console.log("Received message from server",data);
-			$scope.message = data.message;
+			if (data.type === "whiteboard") {
+				handleCanvasMessage(data);
+			} else {
+				$scope.message = data.message;
+			}
 		});
 
 		socket.on('room.created',function(data) {
@@ -93,6 +138,23 @@ angular.module('coboard')
 		addHandlers(socket);
 		socket.emit("users.list", {"room": $scope.roomId});
 	};
+	
+	$scope.canvasMouseDown = function(event) {
+		if (!($scope.roomId))
+			return;
+		socket.emit('message', {"roomId": $scope.roomId, "type": "whiteboard", "x": event.pageX, "y": event.pageY, "mouseEventType": "down", "user": $scope.userName});
+	}
+	
+	$scope.canvasMouseMove = function(event) {
+		if (!($scope.roomId))
+			return;
+		socket.emit('message', {"roomId": $scope.roomId, "type": "whiteboard", "x": event.pageX, "y": event.pageY, "mouseEventType": "move", "user": $scope.userName});
+	}
+	
+	$scope.canvasMouseUp = function(event) {
+		if (!($scope.roomId))
+			return;
+		socket.emit('message', {"roomId": $scope.roomId, "type": "whiteboard", "x": event.pageX, "y": event.pageY, "mouseEventType": "up", "user": $scope.userName});
+	}
 });
-	
-	
+
