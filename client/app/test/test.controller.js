@@ -83,10 +83,15 @@ angular.module('coboard')
 		addHandlers(socket);
 		socket.emit("rooms.list", {});
 	};
-		
-	$scope.listUsers = function() {
+
+	$scope.listRoomsForUser = function() {
 		addHandlers(socket);
-		socket.emit("users.list", {});
+		socket.emit("rooms.list", {"user": $scope.userName});
+	};
+
+	$scope.listUsersForRoom = function() {
+		addHandlers(socket);
+		socket.emit("users.list", {"room": $scope.roomId});
 	};
 });
 	
