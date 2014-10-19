@@ -62,9 +62,9 @@
 				</ul>
 			</div>
 			<div class="add-message">
-				<form ng-submit="send();" class="form-inline">
-					<input type="text" class="chat-new-message" ng-bind="message">
-					<button class="btn">Add</button>
+				<form ng-submit="sendMessage();" class="form-inline">
+					<input type="text" class="chat-new-message" ng-model="message">
+					<button  class="btn">Add</button>
 				</form>
 			</div>
 		</div>

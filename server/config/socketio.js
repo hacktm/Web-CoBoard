@@ -151,7 +151,13 @@ module.exports = function (socketio, app) {
 				socket.emit('user.error', {"message": "User already exists"});
 				return;
 			}
-            rooms[data.roomId].addClient(user);
+
+            if(rooms[data.roomId] !== undefined) {
+                rooms[data.roomId].addClient(user);
+            } else {
+                console.log("Trying to join an unexisting room ".data.roomId);
+            }
+
 			socket.emit('room.joined',{'roomId': data.roomId, 'user': user.name });
         });
 		
@@ -191,7 +197,7 @@ module.exports = function (socketio, app) {
 			var userList = (data.room) ? rooms[data.room].clients : users;
 			var data = [];
 			for (var tag in userList) {
-				var user = userList[userName];
+				var user = userList[tag];
 				data.push({
 					"id": user.id,
 					"name": user.name
