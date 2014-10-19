@@ -197,7 +197,7 @@ module.exports = function (socketio, app) {
 			var userList = (data.room) ? rooms[data.room].clients : users;
 			var data = [];
 			for (var tag in userList) {
-				var user = userList[userName];
+				var user = userList[tag];
 				data.push({
 					"id": user.id,
 					"name": user.name
